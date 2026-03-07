@@ -1,0 +1,36 @@
+{
+  "name": "security-header-check",
+  "version": "1.0.0",
+  "description": "Zero-dependency CLI to audit security headers for any URL with traffic-light scoring and grade A-F.",
+  "main": "index.js",
+  "bin": {
+    "security-header-check": "./index.js"
+  },
+  "scripts": {
+    "test": "node test.js"
+  },
+  "keywords": [
+    "security",
+    "headers",
+    "http",
+    "cli",
+    "csp",
+    "hsts",
+    "audit",
+    "wordpress",
+    "devops"
+  ],
+  "author": "Nicholas Ashkar <nick@cirvgreen.com> (https://cirvgreen.com)",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NickCirv/security-header-check.git"
+  },
+  "homepage": "https://github.com/NickCirv/security-header-check#readme",
+  "bugs": {
+    "url": "https://github.com/NickCirv/security-header-check/issues"
+  }
+}
