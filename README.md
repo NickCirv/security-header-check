@@ -1,5 +1,10 @@
 # 🔒 security-header-check
 
+[![npm version](https://img.shields.io/npm/v/security-header-check.svg)](https://www.npmjs.com/package/security-header-check)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D14-brightgreen.svg)](https://nodejs.org)
+[![Zero Dependencies](https://img.shields.io/badge/dependencies-0-blue.svg)](https://www.npmjs.com/package/security-header-check)
+
 > Zero-dependency Node.js CLI that audits HTTP security headers for any URL — with traffic-light scoring, grade A–F, and exact fix instructions.
 
 ```
@@ -147,3 +152,19 @@ More tools by **[github.com/NickCirv](https://github.com/NickCirv)**:
 ## License
 
 MIT — Nicholas Ashkar / [cirvgreen.com](https://cirvgreen.com)
+
+## Contributing
+
+PRs welcome! If you have a funny idea or improvement:
+
+1. Fork the repo
+2. Create your feature branch (`git checkout -b feature/amazing-idea`)
+3. Commit your changes
+4. Push to the branch (`git push origin feature/amazing-idea`)
+5. Open a Pull Request
+
+Found a bug? [Open an issue](https://github.com/NickCirv/security-header-check/issues).
+
+---
+
+If this made you mass-exhale through your nose, mass-hit that star button.
