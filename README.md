@@ -1,3 +1,5 @@
+![Banner](banner.svg)
+
 # 🔒 security-header-check
 
 [![npm version](https://img.shields.io/npm/v/security-header-check.svg)](https://www.npmjs.com/package/security-header-check)
