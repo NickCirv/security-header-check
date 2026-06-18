@@ -1,13 +1,19 @@
-![Banner](banner.svg)
+![security-header-check — audit HTTP security headers for any URL with grade A–F scoring and exact fix instructions](assets/banner.png)
 
-# 🔒 security-header-check
+<div align="center">
 
-[![npm version](https://img.shields.io/npm/v/security-header-check.svg)](https://www.npmjs.com/package/security-header-check)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Node.js](https://img.shields.io/badge/node-%3E%3D14-brightgreen.svg)](https://nodejs.org)
-[![Zero Dependencies](https://img.shields.io/badge/dependencies-0-blue.svg)](https://www.npmjs.com/package/security-header-check)
+**Know your security header grade in one command. Fix instructions included.**
 
-> Zero-dependency Node.js CLI that audits HTTP security headers for any URL — with traffic-light scoring, grade A–F, and exact fix instructions.
+![license](https://img.shields.io/badge/license-MIT-blue?labelColor=0B0A09)
+![dependencies](https://img.shields.io/badge/dependencies-0-brightgreen?labelColor=0B0A09)
+![node](https://img.shields.io/badge/node-%3E%3D14-brightgreen?labelColor=0B0A09)
+![headers](https://img.shields.io/badge/headers%20checked-10-F87171?labelColor=0B0A09)
+
+</div>
+
+---
+
+Missing a `Content-Security-Policy` lets attackers inject scripts. A weak `Strict-Transport-Security` leaves your HTTPS open to downgrade attacks. Most servers ship with at least three of these headers missing — `security-header-check` tells you exactly which ones, grades the whole picture A through F, and prints the exact header values to paste into your config.
 
 ```
 🔒 SECURITY HEADER CHECK
@@ -29,77 +35,68 @@ Missing headers — add these:
   Referrer-Policy: strict-origin-when-cross-origin
 ```
 
----
-
 ## Install
 
-### Global (recommended)
+No install, no npm account — runs straight from GitHub with zero dependencies:
 
 ```bash
-npm install -g security-header-check
+npx github:NickCirv/security-header-check https://yoursite.com
 ```
-
-### Run without installing
-
-```bash
-npx security-header-check https://yoursite.com
-```
-
----
 
 ## Usage
 
 ```bash
-# Basic check
-security-header-check https://example.com
+# Basic check — grades a URL
+npx github:NickCirv/security-header-check https://example.com
 
 # Skip https:// — it's assumed
-security-header-check example.com
+npx github:NickCirv/security-header-check example.com
 
 # JSON output for CI/CD pipelines
-security-header-check https://example.com --json
+npx github:NickCirv/security-header-check https://example.com --json
 ```
 
----
+| Flag | Description |
+|------|-------------|
+| `<url>` | URL to audit (https:// assumed if omitted) |
+| `--json` | Machine-readable JSON output |
 
-## Headers Checked
+## Headers checked
 
-| Header | What it does |
-|--------|-------------|
-| `Strict-Transport-Security` | Forces HTTPS, prevents downgrade attacks |
-| `Content-Security-Policy` | Controls resource loading, prevents XSS |
-| `X-Content-Type-Options` | Stops MIME sniffing |
-| `X-Frame-Options` | Prevents clickjacking |
-| `X-XSS-Protection` | Legacy XSS filter (deprecated, still scanned) |
-| `Referrer-Policy` | Controls referrer header leakage |
-| `Permissions-Policy` | Locks camera, mic, geolocation access |
-| `Cross-Origin-Opener-Policy` | Isolates browsing context from cross-origin |
-| `Cross-Origin-Resource-Policy` | Prevents cross-origin resource reads |
-| `Cross-Origin-Embedder-Policy` | Enables cross-origin isolation |
+| Header | What it protects against |
+|--------|--------------------------|
+| `Strict-Transport-Security` | HTTPS downgrade attacks |
+| `Content-Security-Policy` | XSS, resource injection |
+| `X-Content-Type-Options` | MIME sniffing |
+| `X-Frame-Options` | Clickjacking |
+| `X-XSS-Protection` | Legacy XSS filter (deprecated — checked but not scored) |
+| `Referrer-Policy` | Referrer header leakage |
+| `Permissions-Policy` | Camera, mic, geolocation access |
+| `Cross-Origin-Opener-Policy` | Cross-origin browsing context isolation |
+| `Cross-Origin-Resource-Policy` | Cross-origin resource reads |
+| `Cross-Origin-Embedder-Policy` | Cross-origin isolation |
 
----
+## Grade table
 
-## Grade Table
-
-| Grade | Score | Label |
-|-------|-------|-------|
+| Grade | Threshold | Label |
+|-------|-----------|-------|
 | **A+** | 10/10 | Fort Knox |
-| **A**  | 8–9  | Solid security posture |
-| **B**  | 6–7  | Good but gaps remain |
-| **C**  | 4–5  | Below average |
-| **D**  | 2–3  | Needs serious work |
-| **F**  | 0–1  | Wide open. Deploy a WAF immediately. |
+| **A**  | ≥ 85%   | Solid security posture |
+| **B**  | ≥ 70%   | Good but gaps remain |
+| **C**  | ≥ 50%   | Below average |
+| **D**  | ≥ 25%   | Needs serious work |
+| **F**  | < 25%   | Wide open. Deploy a WAF immediately. |
 
----
+Green = 1 pt · Yellow (present but weak) = 0.5 pt · Red (missing) = 0 pt. X-XSS-Protection is excluded from scoring as it is deprecated; CSP replaces it.
 
-## CI/CD Integration
+## CI/CD integration
 
-Use `--json` for machine-readable output. Exit code is `0` for A/A+, `1` for anything lower.
+Exit code is `0` for A/A+, `1` for anything lower — fails the build when the grade drops:
 
 ```yaml
-# GitHub Actions example
+# GitHub Actions
 - name: Security header audit
-  run: npx security-header-check https://yoursite.com --json
+  run: npx github:NickCirv/security-header-check https://yoursite.com --json
 ```
 
 ```json
@@ -122,51 +119,14 @@ Use `--json` for machine-readable output. Exit code is `0` for A/A+, `1` for any
 }
 ```
 
----
+## What it is NOT
 
-## Traffic Light Logic
-
-- **Green** — header present and correctly configured
-- **Yellow** — present but weak, permissive, or deprecated
-- **Red** — missing entirely
-
-X-XSS-Protection is included in the output (many scanners still flag it) but excluded from the grade score since it's deprecated and CSP replaces it.
+- **Not a WAF or a prevention tool.** It audits what your server is currently sending — it does not modify headers. Use it to find gaps, then fix them in your server config or CDN.
+- **Not a guarantee.** Grading is based on header presence and common best-practice values. A header being present does not mean it is perfectly tuned for your application.
+- **Not exhaustive.** It checks the 10 most impactful headers per OWASP guidance. Headers specific to your stack (e.g. `Cache-Control`, `Expect-CT`) are out of scope.
 
 ---
 
-## You Might Also Like
-
-### Cirv Guard — WordPress Security Plugin
-
-Running WordPress? Check out **[Cirv Guard](https://cirvgreen.com/products/cirv-guard)** — a lightweight WordPress plugin that adds and manages all these security headers automatically, with one click.
-
-Available free on [WordPress.org](https://wordpress.org/plugins/cirv-guard/).
-
----
-
-More tools by **[github.com/NickCirv](https://github.com/NickCirv)**:
-
-- [schema-or-die](https://github.com/NickCirv/schema-or-die) — Schema.org audit CLI
-- [robots-txt-audit](https://github.com/NickCirv/robots-txt-audit) — robots.txt linter
-
----
-
-## License
-
-MIT — Nicholas Ashkar / [cirvgreen.com](https://cirvgreen.com)
-
-## Contributing
-
-PRs welcome! If you have a funny idea or improvement:
-
-1. Fork the repo
-2. Create your feature branch (`git checkout -b feature/amazing-idea`)
-3. Commit your changes
-4. Push to the branch (`git push origin feature/amazing-idea`)
-5. Open a Pull Request
-
-Found a bug? [Open an issue](https://github.com/NickCirv/security-header-check/issues).
-
----
-
-If this made you mass-exhale through your nose, mass-hit that star button.
+<div align="center">
+<sub>Zero dependencies · Node 14+ · MIT · by <a href="https://github.com/NickCirv">NickCirv</a></sub>
+</div>
