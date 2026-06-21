@@ -7,7 +7,7 @@
     "security-header-check": "./index.js"
   },
   "scripts": {
-    "test": "node test.js"
+    "test": "node --test"
   },
   "keywords": [
     "security",
@@ -23,7 +23,7 @@
   "author": "Nicholas Ashkar <nick@cirvgreen.com> (https://cirvgreen.com)",
   "license": "MIT",
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=20"
   },
   "repository": {
     "type": "git",
